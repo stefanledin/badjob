@@ -16,7 +16,8 @@ class CreateEntriesTable extends Migration
         Schema::create('entries', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamp('started_at');
-            $table->string('working_with');
+            $table->integer('duration');
+            $table->string('working_with')->nullable();
             $table->timestamps();
         });
     }
