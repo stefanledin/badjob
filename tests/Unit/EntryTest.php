@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use App\Entry;
+use DateTime;
 
 class EntryTest extends TestCase
 {
@@ -15,21 +16,35 @@ class EntryTest extends TestCase
     public function test_starts_working_on_a_project()
     {
         $entry = Entry::create([
-            'started_at' => new \DateTime('2017-10-10 07:00'),
-            'duration' => 15,
+            'started_at' => new DateTime('2017-10-10 07:00'),
+            'ended_at' => new DateTime('2017-10-10 07:15'),
             'working_with' => 'Badjob'
         ]);
 
         $this->assertDatabaseHas('entries', [
             'working_with' => 'Badjob',
-            'duration' => 15
+            'duration' => 0.25
         ]);
     }
 
-    public function test_adds_fifteen_minutes_to_a_project()
+    public function test_rounds_to_nearest_quarter()
     {
         $entry = Entry::create([
-            'started_at' => new \DateTime('2017-10-10 07:15'),
+            'started_at' => new DateTime('2017-10-10 07:00'),
+            'ended_at' => new DateTime('2017-10-10 07:25'),
+            'working_with' => 'Badjob'
+        ]);
+
+        $this->assertDatabaseHas('entries', [
+            'working_with' => 'Badjob',
+            'duration' => 0.5
+        ]);
+    }
+
+    /*public function test_adds_fifteen_minutes_to_a_project()
+    {
+        $entry = Entry::create([
+            'started_at' => new DateTime('2017-10-10 07:15'),
             'duration' => 15
         ]);
 
@@ -40,5 +55,5 @@ class EntryTest extends TestCase
         $this->assertDatabaseHas('entries', [
             'duration' => 30
         ]);
-    }
+    }*/
 }
