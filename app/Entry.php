@@ -3,26 +3,31 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use \DateTime;
+use Carbon\Carbon;
 
 class Entry extends Model
 {
     protected $fillable = ['started_at', 'ended_at', 'duration', 'working_with'];
 
-    public function addTime()
+    public function start()
     {
-        $this->duration += 15;
+        $this->started_at = Carbon::now();
     }
 
     public function stop()
     {
-        
+        $this->ended_at = Carbon::now();
     }
 
-    public function setEndedAtAttribute(DateTime $dateTime)
+    public function addTime()
     {
-        $diff = $this->attributes['started_at']->diff($dateTime);
-        $duration = $this->mround($diff->format('%i'));
+        $this->duration += 0.25;
+    }
+
+    public function setEndedAtAttribute(Carbon $dateTime)
+    {
+        $diff = $this->attributes['started_at']->diffInMinutes($dateTime);
+        $duration = $this->mround($diff);
         
         $this->attributes['duration'] = $duration;
         $this->attributes['ended_at'] = $dateTime;
