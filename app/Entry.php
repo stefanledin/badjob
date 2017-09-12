@@ -24,6 +24,11 @@ class Entry extends Model
         $this->duration += 0.25;
     }
 
+    public function removeTime()
+    {
+        $this->duration -= 0.25;
+    }
+
     public function setEndedAtAttribute(Carbon $dateTime)
     {
         $diff = $this->attributes['started_at']->diffInMinutes($dateTime);

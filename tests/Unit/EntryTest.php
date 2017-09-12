@@ -61,12 +61,30 @@ class EntryTest extends TestCase
     public function test_start_and_stop()
     {
         $entry = new Entry();
-        $knownDate = Carbon::create(2017, 10, 10, 13, 00);
-        Carbon::setTestNow($knownDate);
+        Carbon::setTestNow(Carbon::create(2017, 10, 10, 13, 00));
         $entry->start();
         Carbon::setTestNow(Carbon::create(2017, 10, 10, 14, 15));
         $entry->stop();
         Carbon::setTestNow();
         $this->assertEquals($entry->duration, 1.25);
+    }
+
+    public function test_can_add_and_subtract_fifteen_minutes_manually()
+    {
+        $entry = new Entry();
+        Carbon::setTestNow(Carbon::create(2017, 11, 01, 07, 30));
+        $entry->start();
+        Carbon::setTestNow(Carbon::create(2017, 11, 01, 07, 16));
+        $entry->stop();
+        Carbon::setTestNow();
+        
+        $this->assertEquals($entry->duration, 0.25);
+        
+        $entry->addTime();
+        $entry->addTime();
+        $this->assertEquals($entry->duration, 0.75);
+
+        $entry->removeTime();
+        $this->assertEquals($entry->duration, 0.5);
     }
 }
