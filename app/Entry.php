@@ -34,7 +34,7 @@ class Entry extends Model
         $diff = $this->attributes['started_at']->diffInMinutes($dateTime);
         $duration = $this->mround($diff);
         
-        $this->attributes['duration'] = $duration;
+        $this->attributes['duration'] = $this->duration + $duration;
         $this->attributes['ended_at'] = $dateTime;
     }
 

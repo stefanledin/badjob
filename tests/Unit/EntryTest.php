@@ -87,4 +87,22 @@ class EntryTest extends TestCase
         $entry->removeTime();
         $this->assertEquals($entry->duration, 0.5);
     }
+
+    public function test_start_and_stop_and_continue()
+    {
+        $entry = new Entry();
+        Carbon::setTestNow(Carbon::create(2017, 12, 13, 07, 00));
+        $entry->start();
+        Carbon::setTestNow(Carbon::create(2017, 12, 13, 07, 15));
+        $entry->stop();
+
+        $this->assertEquals($entry->duration, 0.25);
+
+        Carbon::setTestNow(Carbon::create(2017, 12, 13, 11, 00));
+        $entry->start();
+        Carbon::setTestNow(Carbon::create(2017, 12, 13, 11, 15));
+        $entry->stop();
+
+        $this->assertEquals($entry->duration, 0.5);
+    }
 }
