@@ -13,7 +13,10 @@ class ExampleTest extends DuskTestCase
     public function test_start_and_stop() {
         $this->browse(function ($browser) {
             $browser->visit('/')
-                ->press('Börja!');
+                ->type('working_with', 'BadJob-projektet')
+                ->press('Börja!')
+                ->assertSee('BadJob-projektet');
         });
+        $this->assertDatabaseHas('entries', ['working_with' => 'BadJob-projektet']);
     }
 }

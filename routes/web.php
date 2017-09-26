@@ -11,6 +11,11 @@
 |
 */
 
-Route::get('/', function () {
-    return view('index', ['title' => 'BadJob®']);
+Route::get('/', 'EntryController@index')->name('home');
+
+Route::post('/', 'EntryController@store');
+
+Route::get('/templates', function ()
+{
+    return view('mocks', ['title' => 'BadJob®']);
 });

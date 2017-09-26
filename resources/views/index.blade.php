@@ -12,54 +12,42 @@
             <div class="row">
                 <div class="col col-sm-6">
 
-                    <div class="card bg-secondary text-light mb-4">
-                        <div class="card-header">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Vad ska du jobba med?">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-dark" type="button">Börja!</button>
-                                </span>
+                    <form action="/" method="POST">
+                        {{ csrf_field() }}
+                        <div class="card bg-secondary text-light mb-4">
+                            <div class="card-header">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="working_with" placeholder="Vad ska du jobba med?">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-dark" type="submit">Börja!</button>
+                                    </span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="card bg-secondary text-light mb-4">
-                        <div class="card-header">
-                            <h4 class="card-title float-left">1 h 14 min 15 sek</h4>
-                            <button class="btn btn-danger float-right">Stopp</button>
-                        </div>
-                        <div class="card-body">
-                            <h4 class="card-title">Beskrivning</h4>
-                            <div class="input-group">
-                                <span class="input-group-btn">
-                                    <button disabled="disabled" class="btn btn-dark border-dark" type="button">-0,25</button>
-                                </span>
-                                <input type="number" disabled="disabled" class="form-control text-center border-dark" value="1.25">
-                                <span class="input-group-btn">
-                                    <button disabled="disabled" class="btn btn-dark border-dark" type="button">+0,25</button>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
+                    </form>
 
-                    <div class="card bg-secondary text-light mb-4">
-                        <div class="card-header">
-                            <h4 class="card-title float-left">1 h 14 min 15 sek</h4>
-                            <button class="btn btn-dark float-right">Fortsätt</button>
-                        </div>
-                        <div class="card-body">
-                            <h4 class="card-title">Beskrivning</h4>
-                            <div class="input-group">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-dark border-dark" type="button">-0,25</button>
-                                </span>
-                                <input type="number" class="form-control text-center border-dark" value="1.25">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-dark border-dark" type="button">+0,25</button>
-                                </span>
+                    @if (count($entries)) @foreach ($entries as $entry)
+                        <form action="">
+                            <div class="card bg-secondary text-light mb-4">
+                                <div class="card-header">
+                                    <h4 class="card-title float-left">{{ $entry->started_at }}</h4>
+                                    <button class="btn btn-danger float-right">Stopp</button>
+                                </div>
+                                <div class="card-body">
+                                    <h4 class="card-title">{{ $entry->working_with }}</h4>
+                                    <div class="input-group">
+                                        <span class="input-group-btn">
+                                            <button disabled="disabled" class="btn btn-dark border-dark" type="button">-0,25</button>
+                                        </span>
+                                        <input type="number" disabled="disabled" class="form-control text-center border-dark" value="{{ $entry->duration }}">
+                                        <span class="input-group-btn">
+                                            <button disabled="disabled" class="btn btn-dark border-dark" type="button">+0,25</button>
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                        </form>
+                    @endforeach @endif
 
                 </div>
                 <div class="col col-sm-6">
