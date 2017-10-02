@@ -46,6 +46,24 @@ class EntryController extends Controller
         return redirect()->route('home');
     }
 
+    public function resume($id)
+    {
+        $entry = Entry::find($id);
+        $entry->start();
+        $entry->working_with = request('working_with');
+        $entry->save();
+        return redirect()->route('home');
+    }
+
+    public function stop($id)
+    {
+        $entry = Entry::find($id);
+        $entry->stop();
+        $entry->working_with = request('working_with');
+        $entry->save();
+        return redirect()->route('home');
+    }
+
     /**
      * Display the specified resource.
      *

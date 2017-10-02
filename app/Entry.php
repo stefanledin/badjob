@@ -12,11 +12,35 @@ class Entry extends Model
     public function start()
     {
         $this->started_at = Carbon::now();
+        $this->ended_at = null;
     }
 
     public function stop()
     {
-        $this->ended_at = Carbon::now();
+        $startedAt = Carbon::createFromTimestamp(strtotime($this->attributes['started_at']));
+        $endedAt = Carbon::now();
+
+        $diff = $startedAt->diffInMinutes($endedAt);
+        $duration = $this->mround($diff);
+        
+        $this->duration = $this->duration + $duration;
+        $this->ended_at = $endedAt;
+    }
+
+    public function timeSpent()
+    {
+        $startedAt = Carbon::createFromTimestamp(strtotime($this->attributes['started_at']));
+        if ($this->ended_at) {
+            $end = Carbon::createFromTimeStamp(strtotime($this->ended_at));
+        } else {
+            $end = Carbon::now();
+        }
+        $diff = $startedAt->diff($end);
+        return sprintf('%s h %s m %s s',
+            $diff->h,
+            $diff->i,
+            $diff->s
+        );
     }
 
     public function addTime()
@@ -27,15 +51,6 @@ class Entry extends Model
     public function removeTime()
     {
         $this->duration -= 0.25;
-    }
-
-    public function setEndedAtAttribute(Carbon $dateTime)
-    {
-        $diff = $this->attributes['started_at']->diffInMinutes($dateTime);
-        $duration = $this->mround($diff);
-        
-        $this->attributes['duration'] = $this->duration + $duration;
-        $this->attributes['ended_at'] = $dateTime;
     }
 
     // Stulet från mround-funktionen i Excel (tydligen.)

@@ -13,7 +13,10 @@
 
 Route::get('/', 'EntryController@index')->name('home');
 
-Route::post('/', 'EntryController@store');
+Route::post('/entry/start', 'EntryController@store')->name('start');
+
+Route::post('/entry/{id}/resume', 'EntryController@resume')->name('resume');
+Route::post('/entry/{id}/stop', 'EntryController@stop')->name('stop');
 
 Route::get('/templates', function ()
 {
