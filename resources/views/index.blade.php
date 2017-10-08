@@ -27,30 +27,32 @@
                     </form>
 
                     @if (count($entries)) @foreach ($entries as $entry)
-
-                        @if ($entry->ended_at)
-                            <form action="{{ route('resume', ['id' => $entry->id]) }}" method="POST">
-                                {{ csrf_field() }}
-                                <div class="card bg-secondary text-light mb-4">
-                                    <div class="card-header">
-                                        <h4 class="card-title float-left">{{ $entry->timeSpent() }}</h4>
-                                        <button class="btn btn-dark float-right">Fortsätt</button>
+                        
+                        <div id="entry-{{ $entry->id }}" class="entry-wrapper">
+                            @if ($entry->ended_at)
+                                <form action="{{ route('resume', ['id' => $entry->id]) }}" method="POST">
+                                    {{ csrf_field() }}
+                                    <div class="card bg-secondary text-light mb-4">
+                                        <div class="card-header">
+                                            <h4 class="card-title float-left js-time-spent">{{ $entry->timeSpent() }}</h4>
+                                            <button class="btn btn-dark float-right js-start-timer">Fortsätt</button>
+                                        </div>
+                                        @include('entry/card-body')
                                     </div>
-                                    @include('entry/card-body')
-                                </div>
-                            </form>
-                        @else
-                            <form action="{{ route('stop', ['id' => $entry->id]) }}" method="POST">
-                                {{ csrf_field() }}
-                                <div class="card bg-secondary text-light mb-4">
-                                    <div class="card-header">
-                                        <h4 class="card-title float-left">{{ $entry->timeSpent() }}</h4>
-                                        <button class="btn btn-danger float-right">Stopp</button>
+                                </form>
+                            @else
+                                <form action="{{ route('stop', ['id' => $entry->id]) }}" method="POST">
+                                    {{ csrf_field() }}
+                                    <div class="card bg-secondary text-light mb-4">
+                                        <div class="card-header">
+                                            <h4 class="card-title float-left">{{ $entry->timeSpent() }}</h4>
+                                            <button class="btn btn-danger float-right">Stopp</button>
+                                        </div>
+                                        @include('entry/card-body')
                                     </div>
-                                    @include('entry/card-body')
-                                </div>
-                            </form>
-                        @endif
+                                </form>
+                            @endif
+                        </div>
 
                     @endforeach @endif
                 </div>
