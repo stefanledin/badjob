@@ -11,7 +11,14 @@
 |
 */
 
+use Carbon\Carbon;
+use App\Entry;
+
 Route::get('/', 'EntryController@index')->name('home');
+
+Route::get('entries', function() {
+    return Entry::all();
+});
 
 Route::post('/entry/start', 'EntryController@store')->name('start');
 

@@ -42,8 +42,9 @@ class EntryController extends Controller
         $entry = new Entry();
         $entry->start();
         $entry->working_with = request('working_with');
+        $entry->duration = 0;
         $entry->save();
-        return redirect()->route('home');
+        return $entry;
     }
 
     public function resume($id)
@@ -52,7 +53,7 @@ class EntryController extends Controller
         $entry->start();
         $entry->working_with = request('working_with');
         $entry->save();
-        return redirect()->route('home');
+        return $entry;
     }
 
     public function stop($id)
@@ -61,7 +62,7 @@ class EntryController extends Controller
         $entry->stop();
         $entry->working_with = request('working_with');
         $entry->save();
-        return redirect()->route('home');
+        return $entry;
     }
 
     /**
