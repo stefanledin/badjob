@@ -21,6 +21,7 @@
     "dependencies": {
         "bootstrap": "^4.0.0-beta",
         "easytimer": "^1.1.1",
+        "easytimer.js": "^2.0.0",
         "jquery": "^3.0.0",
         "popper.js": "^1.11.0"
     }
