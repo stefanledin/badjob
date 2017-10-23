@@ -29,3 +29,5 @@ Route::get('/templates', function ()
 {
     return view('mocks', ['title' => 'BadJob®']);
 });
+
+Route::resource('projects', 'ProjectController');
