@@ -32,15 +32,14 @@
         },
 
         mounted() {
-            const h4 = this.$el.querySelector('h4');
-            const timer = new Timer();
-            timer.start();
-            timer.addEventListener('secondsUpdated', function (event) {
-                 h4.innerHTML = timer.getTimeValues().toString();
-            });
+            this.timer = new Timer();
+            if (!this.ended_at) {
+                this.startTimer();
+            }
         },
 
         methods: {
+            
             decrease: function () {
                 if (this.duration > 0) {
                     this.duration -= 0.25
@@ -61,6 +60,7 @@
             },
 
             resume() {
+                this.startTimer();
                 axios.post(`/entry/${this.id}/resume`, {
                     working_with: this.working_with,
                     duration: this.duration
@@ -70,6 +70,9 @@
             },
 
             stop() {
+                this.timer.stop();
+                this.timer.reset();
+                
                 axios.post(`/entry/${this.id}/stop`, {
                     working_with: this.working_with,
                     duration: this.duration
@@ -82,7 +85,16 @@
                 this.duration = response.data.duration;
                 this.working_with = response.data.working_with;
                 this.ended_at = response.data.ended_at;
-            }
+            },
+
+            startTimer() {
+                const h4 = this.$el.querySelector('h4');
+                const timer = new Timer();
+                this.timer.start();
+                this.timer.addEventListener('secondsUpdated', function (event) {
+                     h4.innerHTML = this.timer.getTimeValues().toString();
+                }.bind(this));
+            },
         },
 
 
