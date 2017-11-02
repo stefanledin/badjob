@@ -41,8 +41,6 @@ class EntryController extends Controller
     {
         $entry = new Entry();
         $entry->start();
-        $entry->working_with = request('working_with');
-        $entry->duration = 0;
         $entry->save();
         return $entry;
     }
@@ -51,7 +49,6 @@ class EntryController extends Controller
     {
         $entry = Entry::find($id);
         $entry->start();
-        $entry->working_with = request('working_with');
         $entry->save();
         return $entry;
     }
@@ -60,7 +57,6 @@ class EntryController extends Controller
     {
         $entry = Entry::find($id);
         $entry->stop();
-        $entry->working_with = request('working_with');
         $entry->save();
         return $entry;
     }

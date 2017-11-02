@@ -15,8 +15,7 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example-component', require('./components/ExampleComponent.vue'));
-Vue.component('entry', require('./components/entry.vue'));
+Vue.component('project', require('./components/project.vue'));
 
 const app = new Vue({
     el: '#app',
@@ -24,12 +23,13 @@ const app = new Vue({
     data: {
         working: false,
         start_working_on: '',
-        entries: []
+        projects: []
     },
     
     created: function () {
-        axios.get('/entries').then((response) => {
+        axios.get('/projects').then((response) => {
             this.entries = response.data;
+            console.log(this.entries);
         }).catch((error) => console.log(error));
     },
     

@@ -14,7 +14,9 @@
 use Carbon\Carbon;
 use App\Entry;
 
-Route::get('/', 'EntryController@index')->name('home');
+Route::get('/', function() {
+    return view('index', ['title' => 'BadJob®']);
+})->name('home');
 
 Route::get('entries', function() {
     return Entry::all();

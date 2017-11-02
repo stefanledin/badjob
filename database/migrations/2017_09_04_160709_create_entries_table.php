@@ -18,7 +18,6 @@ class CreateEntriesTable extends Migration
             $table->timestamp('started_at')->useCurrent();
             $table->timestamp('ended_at')->nullable();
             $table->float('duration')->default(0);
-            $table->string('working_with')->nullable();
             $table->timestamps();
         });
     }

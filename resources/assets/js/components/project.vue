@@ -25,10 +25,10 @@
 
     export default {
 
-        props:['entry'],
+        props:['project'],
 
         data() {
-            return this.entry;
+            return this.project;
         },
 
         mounted() {

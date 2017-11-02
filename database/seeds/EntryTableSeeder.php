@@ -16,9 +16,7 @@ class EntryTableSeeder extends Seeder
     {
         DB::table('entries')->insert([
             'started_at' => Carbon::create(2017, 10, 10, 07, 00),
-            'ended_at' => Carbon::create(2017, 10, 10, 07, 25),
-            'working_with' => 'Badjob',
-            'duration' => 0.5
+            'ended_at' => Carbon::create(2017, 10, 10, 07, 25)
         ]);
     }
 }

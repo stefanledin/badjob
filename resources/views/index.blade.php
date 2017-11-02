@@ -24,7 +24,10 @@
                             </div>
                         </div>
                         
+                        <project v-for="project in projects" v-bind:project="project" v-bind:key="project.id"></project>
+                        <!--
                         <entry v-for="entry in entries" v-bind:entry="entry" v-bind:key="entry.id"></entry>
+                        -->
                     </div>
 
                 </div>
