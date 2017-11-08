@@ -18,14 +18,14 @@ Route::get('/', function() {
     return view('index', ['title' => 'BadJob®']);
 })->name('home');
 
-Route::get('entries', function() {
+/*Route::get('entries', function() {
     return Entry::all();
 });
 
 Route::post('/entry/start', 'EntryController@store')->name('start');
 
 Route::post('/entry/{id}/resume', 'EntryController@resume')->name('resume');
-Route::post('/entry/{id}/stop', 'EntryController@stop')->name('stop');
+Route::post('/entry/{id}/stop', 'EntryController@stop')->name('stop');*/
 
 Route::get('/templates', function ()
 {
@@ -33,3 +33,4 @@ Route::get('/templates', function ()
 });
 
 Route::resource('projects', 'ProjectController');
+Route::resource('entries', 'EntryController');

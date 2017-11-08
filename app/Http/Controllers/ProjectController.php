@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Project;
+use App\Entry;
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
@@ -14,7 +16,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        return Project::all();
+        return Project::orderBy('updated_at', 'desc')->with('entries')->get();
     }
 
     /**
@@ -36,8 +38,10 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $project = Project::create([
-            'name' => $request->input('name')
+            'name' => $request->input('name'),
+            'timer_started_at' => Carbon::now()
         ]);
+        
         return $project;
     }
 
@@ -72,7 +76,9 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Project $project)
     {
-        //
+        $project->timer_started_at = $request->input('timer_started_at');
+        $project->save();
+        return $project;
     }
 
     /**

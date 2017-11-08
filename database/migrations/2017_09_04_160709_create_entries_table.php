@@ -15,7 +15,7 @@ class CreateEntriesTable extends Migration
     {
         Schema::create('entries', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamp('started_at')->useCurrent();
+            $table->timestamp('started_at')->nullable();
             $table->timestamp('ended_at')->nullable();
             $table->float('duration')->default(0);
             $table->timestamps();

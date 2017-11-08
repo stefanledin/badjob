@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 use App\Entry;
 
@@ -15,10 +16,7 @@ class EntryController extends Controller
      */
     public function index()
     {
-        return view('index', [
-            'title' => 'BadJob®',
-            'entries' => Entry::all()
-        ]);
+        //
     }
 
     /**
@@ -40,16 +38,11 @@ class EntryController extends Controller
     public function store(Request $request)
     {
         $entry = new Entry();
-        $entry->start();
+        $entry->started_at = $request->input('started_at');
+        $entry->ended_at = Carbon::now();
+        $entry->project()->associate($request->input('project_id'));
         $entry->save();
-        return $entry;
-    }
 
-    public function resume($id)
-    {
-        $entry = Entry::find($id);
-        $entry->start();
-        $entry->save();
         return $entry;
     }
 

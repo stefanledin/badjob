@@ -15,19 +15,18 @@
                     <div id="app">
                         <div class="card bg-secondary text-light mb-4" v-if="! working">
                             <div class="card-header">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" name="working_with" placeholder="Vad ska du jobba med?" v-model="start_working_on">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-dark" type="submit" v-on:click="startWorking">Börja!</button>
-                                    </span>
-                                </div>
+                                <form v-on:submit="startWorking">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="working_with" placeholder="Vad ska du jobba med?" v-model="start_working_on">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-dark" type="submit">Börja!</button>
+                                        </span>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                         
                         <project v-for="project in projects" v-bind:project="project" v-bind:key="project.id"></project>
-                        <!--
-                        <entry v-for="entry in entries" v-bind:entry="entry" v-bind:key="entry.id"></entry>
-                        -->
                     </div>
 
                 </div>

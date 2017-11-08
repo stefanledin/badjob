@@ -28,19 +28,27 @@ const app = new Vue({
     
     created: function () {
         axios.get('/projects').then((response) => {
-            this.entries = response.data;
-            console.log(this.entries);
+            this.projects = response.data;
         }).catch((error) => console.log(error));
     },
     
     methods: {
-        startWorking: function () {
-            axios.post('/entry/start', {
-                working_with: this.start_working_on
+
+        startWorking(event) {
+            event.preventDefault();
+            axios.post('/projects', {
+                name: this.start_working_on
             })
-            .then((response) => this.entries.push(response.data))
-            .catch((error) => console.log(error));
+                .then((response) => {
+                    if (response.data) {
+                        const project = response.data;
+                        this.projects.unshift(project);
+                    }
+                    this.start_working_on = '';
+                })
+                .catch((error) => console.log(error));
         }
+
     }
 
 });

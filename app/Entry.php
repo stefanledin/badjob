@@ -7,7 +7,7 @@ use Carbon\Carbon;
 
 class Entry extends Model
 {
-    protected $fillable = ['started_at', 'ended_at'];
+    protected $fillable = ['started_at', 'ended_at', 'project_id'];
 
     public function start()
     {

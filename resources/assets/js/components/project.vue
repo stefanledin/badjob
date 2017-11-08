@@ -1,12 +1,31 @@
 <template>
     <div class="card bg-secondary text-light mb-4">
         <div class="card-header">
-            <h4 class="card-title float-left">00:00:00</h4>
-            <button class="btn btn-dark float-right" v-if="ended_at" v-on:click="resume">Fortsätt</button>
-            <button class="btn btn-danger float-right" v-else v-on:click="stop">Stopp</button>
+            <h4 class="card-title">{{ name }}</h4>
         </div>
-        <div class="card-body">
-            <h4 class="card-title">{{ working_with }}</h4>
+        <div class="card-body" v-if="entries.length">
+            <ul class="list-group">
+                <li class="list-group-item bg-secondary d-flex justify-content-between align-items-center" v-for="entry in entries" v-if="entry.ended_at">
+                    <span>{{ entry.started_at }}-{{ entry.ended_at }}</span>
+                    <span>0</span>
+                </li>
+            </ul>
+        </div>
+        <div class="card-footer">
+
+            <form action="/entries" method="POST" class="d-flex justify-content-between">
+                <h4 class="card-title js-timer">00:00:00</h4>
+                <input type="hidden" :value="id">
+                <input type="hidden" v-model="timer_started_at">
+                <input type="submit" v-if="! timer_started_at" value="Börja" class="btn btn-dark">
+                <input type="submit" v-else v-on:click="stopTimer" value="Stopp" class="btn btn-danger">
+            </form>
+            
+            <!--
+            <button class="btn btn-danger float-right" v-on:click="stop">Stopp</button>
+            -->
+
+            <!--
             <div class="input-group">
                 <span class="input-group-btn">
                     <button class="btn btn-dark border-dark" type="button" v-on:click="decrease">-0,25</button>
@@ -16,87 +35,79 @@
                     <button class="btn btn-dark border-dark" type="button" v-on:click="increase">+0,25</button>
                 </span>
             </div>
+            -->
+
         </div>
     </div>
 </template>
 
 <script>
     const Timer = require('easytimer');
+    const moment = require('moment');
 
     export default {
 
         props:['project'],
 
         data() {
+            if (!this.project.entries) {
+                this.project.entries = [];
+            }
+            
             return this.project;
         },
 
         mounted() {
             this.timer = new Timer();
-            if (!this.ended_at) {
-                this.startTimer();
+            if (this.timer_started_at) {
+                this.startTimer(this.timer_started_at);
             }
         },
 
         methods: {
-            
-            decrease: function () {
-                if (this.duration > 0) {
-                    this.duration -= 0.25
-                }
-                this.sync();
-            },
 
-            increase: function () {
-                this.duration += 0.25;
-                this.sync();
-            },
-
-            sync() {
-                axios.post(`/entry/${this.id}/stop`, {
-                    working_with: this.working_with,
-                    duration: this.duration
-                });
-            },
-
-            resume() {
-                this.startTimer();
-                axios.post(`/entry/${this.id}/resume`, {
-                    working_with: this.working_with,
-                    duration: this.duration
-                })
-                    .then(this.update.bind(this))
-                    .catch((error) => console.log(error));
-            },
-
-            stop() {
+            stopTimer(event) {
+                event.preventDefault();
                 this.timer.stop();
-                this.timer.reset();
-                
-                axios.post(`/entry/${this.id}/stop`, {
-                    working_with: this.working_with,
-                    duration: this.duration
+                this.createEntry();
+            },
+
+            createEntry() {
+                axios.post('/entries', {
+                    project_id: this.id,
+                    started_at: this.timer_started_at
                 })
-                    .then(this.update.bind(this))
-                    .catch((error) => console.log(error));
+                    .then((response) => {
+                        if (response.data) {
+                            const entry = response.data;
+                            this.entries.push(entry);
+                        }
+                    })
+
+                axios.put(`/projects/${this.id}`, {
+                    timer_started_at: ''
+                })
+                    .then((response) => {
+                        console.log(response);
+                        //this.timer_started_at = null;
+                    })
             },
 
-            update(response) {
-                this.duration = response.data.duration;
-                this.working_with = response.data.working_with;
-                this.ended_at = response.data.ended_at;
-            },
+            startTimer(startTime) {
+                const h4 = this.$el.querySelector('h4.js-timer');
+                const now = moment();
 
-            startTimer() {
-                const h4 = this.$el.querySelector('h4');
-                const timer = new Timer();
-                this.timer.start();
+                this.timer.start({
+                    startValues: {
+                        seconds: now.diff(moment(startTime), 'seconds')
+                    }
+                });
                 this.timer.addEventListener('secondsUpdated', function (event) {
                      h4.innerHTML = this.timer.getTimeValues().toString();
                 }.bind(this));
             },
-        },
 
+        }
 
     }
 </script>

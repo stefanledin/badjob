@@ -7,7 +7,7 @@ use Carbon\Carbon;
 
 class Project extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'timer_started_at'];
 
     public function entries()
     {

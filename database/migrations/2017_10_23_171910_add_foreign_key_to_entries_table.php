@@ -14,7 +14,7 @@ class AddForeignKeyToEntriesTable extends Migration
     public function up()
     {
         Schema::table('entries', function (Blueprint $table) {
-            $table->integer('project_id')->unsigned();
+            $table->integer('project_id')->unsigned()->nullable();
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
         });
     }
