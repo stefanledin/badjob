@@ -53,7 +53,6 @@
             if (!this.project.entries) {
                 this.project.entries = [];
             }
-            
             return this.project;
         },
 
@@ -81,6 +80,7 @@
                         if (response.data) {
                             const entry = response.data;
                             this.entries.push(entry);
+                            console.log(this.entries);
                         }
                     })
 
@@ -88,8 +88,7 @@
                     timer_started_at: ''
                 })
                     .then((response) => {
-                        console.log(response);
-                        //this.timer_started_at = null;
+                        this.timer_started_at = response.data.timer_started_at;
                     })
             },
 

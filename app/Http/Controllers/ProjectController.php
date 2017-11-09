@@ -39,7 +39,7 @@ class ProjectController extends Controller
     {
         $project = Project::create([
             'name' => $request->input('name'),
-            'timer_started_at' => Carbon::now()
+            'timer_started_at' => date('Y-m-d H:i:s')
         ]);
         
         return $project;

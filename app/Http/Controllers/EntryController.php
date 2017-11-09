@@ -39,7 +39,7 @@ class EntryController extends Controller
     {
         $entry = new Entry();
         $entry->started_at = $request->input('started_at');
-        $entry->ended_at = Carbon::now();
+        $entry->ended_at = date('Y-m-d H:i:s');
         $entry->project()->associate($request->input('project_id'));
         $entry->save();
 
