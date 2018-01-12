@@ -108,8 +108,27 @@
 
             continueWork(event) {
                 event.preventDefault();
-                this.createEntry();
-                //this.startTimer(moment().format('Y-MM-DD H:mm:ss'));
+                const startTime = moment().format('Y-MM-DD H:mm:ss');
+                axios.post('/entries', {
+                    project_id: this.id,
+                    started_at: startTime
+                })
+                    .then((response) => {
+                        console.log(response);
+                        if (response.data) {
+                            const entry = response.data;
+                            this.entries.push(entry);
+                            console.log(this.entries);
+                        }
+                    })
+
+                axios.put(`/projects/${this.id}`, {
+                    timer_started_at: startTime
+                })
+                    .then((response) => {
+                        console.log(response);
+                        this.timer_started_at = response.data.timer_started_at;
+                    })
             }
 
         }
