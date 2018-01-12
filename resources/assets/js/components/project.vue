@@ -5,7 +5,7 @@
         </div>
         <div class="card-body" v-if="entries.length">
             <ul class="list-group">
-                <li class="list-group-item bg-secondary d-flex justify-content-between align-items-center" v-for="entry in entries" v-if="entry.ended_at">
+                <li class="list-group-item bg-secondary d-flex justify-content-between align-items-center" v-for="entry in entries" v-if="entry.ended_at" :key="entry.id">
                     <span>{{ entry.started_at }}-{{ entry.ended_at }}</span>
                     <span>0</span>
                 </li>
@@ -17,7 +17,7 @@
                 <h4 class="card-title js-timer">00:00:00</h4>
                 <input type="hidden" :value="id">
                 <input type="hidden" v-model="timer_started_at">
-                <input type="submit" v-if="! timer_started_at" value="Börja" class="btn btn-dark">
+                <input type="submit" v-if="! timer_started_at" v-on:click="continueWork" value="Fortsätt" class="btn btn-dark">
                 <input type="submit" v-else v-on:click="stopTimer" value="Stopp" class="btn btn-danger">
             </form>
             
@@ -105,6 +105,12 @@
                      h4.innerHTML = this.timer.getTimeValues().toString();
                 }.bind(this));
             },
+
+            continueWork(event) {
+                event.preventDefault();
+                this.createEntry();
+                //this.startTimer(moment().format('Y-MM-DD H:mm:ss'));
+            }
 
         }
 
