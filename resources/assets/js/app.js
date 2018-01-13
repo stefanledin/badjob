@@ -14,9 +14,10 @@ window.Vue = require('vue');
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-
 Vue.component('project', require('./components/project.vue'));
 
+import db from './database';
+import moment from 'moment';
 const app = new Vue({
     el: '#app',
     
@@ -34,9 +35,22 @@ const app = new Vue({
     
     methods: {
 
-        startWorking(event) {
+        async startWorking(event) {
             event.preventDefault();
-            axios.post('/projects', {
+
+            const entryId = await db.entry.add({
+                started_at: moment().format('Y-MM-DD H:mm:ss')
+            });
+            const projectId = await db.project.add({
+                name: this.start_working_on,
+                entries: [entryId]
+            });
+
+            const project = await db.project.get(projectId);
+            this.projects.push(project);
+            this.start_working_on = '';
+
+            /* axios.post('/projects', {
                 name: this.start_working_on
             })
                 .then((response) => {
@@ -46,7 +60,7 @@ const app = new Vue({
                     }
                     this.start_working_on = '';
                 })
-                .catch((error) => console.log(error));
+                .catch((error) => console.log(error)); */
         }
 
     }

@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "bootstrap": "^4.0.0-beta",
+    "dexie": "^2.0.1",
     "easytimer": "^1.1.1",
     "easytimer.js": "^2.0.0",
     "jquery": "^3.0.0",

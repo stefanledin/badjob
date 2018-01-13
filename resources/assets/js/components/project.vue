@@ -58,9 +58,10 @@
 
         mounted() {
             this.timer = new Timer();
-            if (this.timer_started_at) {
+            console.log(this);
+            /* if (this.timer_started_at) {
                 this.startTimer(this.timer_started_at);
-            }
+            } */
         },
 
         methods: {
