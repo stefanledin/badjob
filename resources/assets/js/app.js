@@ -27,10 +27,11 @@ const app = new Vue({
         projects: []
     },
     
-    created: function () {
-        axios.get('/projects').then((response) => {
+    created: async function () {
+        this.projects = await db.project.toArray();
+        /*axios.get('/projects').then((response) => {
             this.projects = response.data;
-        }).catch((error) => console.log(error));
+        }).catch((error) => console.log(error));*/
     },
     
     methods: {
@@ -39,11 +40,14 @@ const app = new Vue({
             event.preventDefault();
 
             const entryId = await db.entry.add({
-                started_at: moment().format('Y-MM-DD H:mm:ss')
+                started_at: moment().format('Y-MM-DD H:mm:ss'),
+                ended_at: ''
             });
+            //const entry = await db.entry.get(entryId);
             const projectId = await db.project.add({
                 name: this.start_working_on,
-                entries: [entryId]
+                entries: [entryId],
+                timer_running: true
             });
 
             const project = await db.project.get(projectId);
