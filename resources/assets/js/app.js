@@ -14,9 +14,10 @@ window.Vue = require('vue');
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-
 Vue.component('project', require('./components/project.vue'));
 
+import db from './database';
+import moment from 'moment';
 const app = new Vue({
     el: '#app',
     
@@ -26,17 +27,34 @@ const app = new Vue({
         projects: []
     },
     
-    created: function () {
-        axios.get('/projects').then((response) => {
+    created: async function () {
+        this.projects = await db.project.toArray();
+        /*axios.get('/projects').then((response) => {
             this.projects = response.data;
-        }).catch((error) => console.log(error));
+        }).catch((error) => console.log(error));*/
     },
     
     methods: {
 
-        startWorking(event) {
+        async startWorking(event) {
             event.preventDefault();
-            axios.post('/projects', {
+
+            const entryId = await db.entry.add({
+                started_at: moment().format('Y-MM-DD H:mm:ss'),
+                ended_at: ''
+            });
+            //const entry = await db.entry.get(entryId);
+            const projectId = await db.project.add({
+                name: this.start_working_on,
+                entries: [entryId],
+                timer_running: true
+            });
+
+            const project = await db.project.get(projectId);
+            this.projects.push(project);
+            this.start_working_on = '';
+
+            /* axios.post('/projects', {
                 name: this.start_working_on
             })
                 .then((response) => {
@@ -46,7 +64,7 @@ const app = new Vue({
                     }
                     this.start_working_on = '';
                 })
-                .catch((error) => console.log(error));
+                .catch((error) => console.log(error)); */
         }
 
     }

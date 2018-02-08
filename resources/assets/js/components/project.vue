@@ -16,8 +16,8 @@
             <form action="/entries" method="POST" class="d-flex justify-content-between">
                 <h4 class="card-title js-timer">00:00:00</h4>
                 <input type="hidden" :value="id">
-                <input type="hidden" v-model="timer_started_at">
-                <input type="submit" v-if="! timer_started_at" v-on:click="continueWork" value="Fortsätt" class="btn btn-dark">
+                <!--<input type="hidden" v-model="timer_started_at">-->
+                <input type="submit" v-if="! timer_running" v-on:click="continueWork" value="Fortsätt" class="btn btn-dark">
                 <input type="submit" v-else v-on:click="stopTimer" value="Stopp" class="btn btn-danger">
             </form>
             
@@ -42,36 +42,53 @@
 </template>
 
 <script>
+    import db from '../database';
     const Timer = require('easytimer');
     const moment = require('moment');
+    const collect = require('collect.js');
 
     export default {
 
         props:['project'],
 
         data() {
-            if (!this.project.entries) {
-                this.project.entries = [];
+            const getEntries = async function (entryId) {
+                return await db.entry.get(entryId);
             }
+            this.project.entries = this.project.entries.map(entryId => {
+                
+            });
+            console.log(this.project.entries);
             return this.project;
         },
 
         mounted() {
             this.timer = new Timer();
-            if (this.timer_started_at) {
-                this.startTimer(this.timer_started_at);
-            }
+            return;
+            if (!this.timer_running) return;
+
+            const collection = collect(this.entries);
+            this.currentEntry = collection.where('ended_at', '').first();
+            //console.log(this.currentEntry.id, this.currentEntry.started_at, this.currentEntry.ended_at);
+            this.startTimer(this.currentEntry.started_at);
         },
 
         methods: {
 
-            stopTimer(event) {
+            async stopTimer(event) {
                 event.preventDefault();
                 this.timer.stop();
-                this.createEntry();
+                this.timer_running = false;
+                const ended_at = moment().format('Y-MM-DD H:mm:ss');
+                this.currentEntry.ended_at = ended_at;
+                const currentEntry = await db.entry.update(this.currentEntry.id, {
+                    ended_at
+                }); 
+                //this.createEntry();
             },
 
             createEntry() {
+                /*
                 axios.post('/entries', {
                     project_id: this.id,
                     started_at: this.timer_started_at
@@ -90,6 +107,7 @@
                     .then((response) => {
                         this.timer_started_at = response.data.timer_started_at;
                     })
+                */
             },
 
             startTimer(startTime) {
