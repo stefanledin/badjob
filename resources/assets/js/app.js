@@ -39,11 +39,13 @@ const app = new Vue({
         async startWorking(event) {
             event.preventDefault();
 
+            // Skapa ett entry och returnera ID
             const entryId = await db.entry.add({
                 started_at: moment().format('Y-MM-DD H:mm:ss'),
                 ended_at: ''
             });
-            //const entry = await db.entry.get(entryId);
+            
+            // Skapa ett nytt projekt som har det nya entryt.
             const projectId = await db.project.add({
                 name: this.start_working_on,
                 entries: [entryId],
@@ -52,6 +54,7 @@ const app = new Vue({
 
             const project = await db.project.get(projectId);
             this.projects.push(project);
+
             this.start_working_on = '';
 
             /* axios.post('/projects', {

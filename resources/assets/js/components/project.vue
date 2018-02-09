@@ -5,7 +5,7 @@
         </div>
         <div class="card-body" v-if="entries.length">
             <ul class="list-group">
-                <li class="list-group-item bg-secondary d-flex justify-content-between align-items-center" v-for="entry in entries" v-if="entry.ended_at" :key="entry.id">
+                <li class="list-group-item bg-secondary d-flex justify-content-between align-items-center" v-if="entry.ended_at" v-for="entry in entries" :key="entry.id">
                     <span>{{ entry.started_at }}-{{ entry.ended_at }}</span>
                     <span>0</span>
                 </li>
@@ -52,35 +52,41 @@
         props:['project'],
 
         data() {
-            const getEntries = async function (entryId) {
-                return await db.entry.get(entryId);
-            }
-            this.project.entries = this.project.entries.map(entryId => {
-                
-            });
-            console.log(this.project.entries);
-            return this.project;
+            let data = {};
+            data = Object.assign({}, data, this.project);
+            return data;
         },
 
         mounted() {
             this.timer = new Timer();
-            return;
             if (!this.timer_running) return;
 
-            const collection = collect(this.entries);
-            this.currentEntry = collection.where('ended_at', '').first();
-            //console.log(this.currentEntry.id, this.currentEntry.started_at, this.currentEntry.ended_at);
-            this.startTimer(this.currentEntry.started_at);
+            //const collection = collect(entries);
+            //this.currentEntry = collection.where('ended_at', '').first();
+
+            //this.startTimer(this.currentEntry.started_at);
         },
 
         methods: {
+            
+            /*async getEntries() {
+                const entries =  await Promise.all(this.project.entries.map(async function (entryID) {
+                    const entry = await db.entry.get(entryID);
+                    return entry;
+                }));
+                console.log('entries', entries);
+                this.entries = entries;                
+            },*/
 
             async stopTimer(event) {
                 event.preventDefault();
+
                 this.timer.stop();
                 this.timer_running = false;
+
                 const ended_at = moment().format('Y-MM-DD H:mm:ss');
                 this.currentEntry.ended_at = ended_at;
+                
                 const currentEntry = await db.entry.update(this.currentEntry.id, {
                     ended_at
                 }); 
