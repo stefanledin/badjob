@@ -5,7 +5,7 @@
         </div>
         <div class="card-body" v-if="entries.length">
             <ul class="list-group">
-                <li class="list-group-item bg-secondary d-flex justify-content-between align-items-center" v-for="entry in entries" v-if="entry.ended_at" :key="entry.id">
+                <li class="list-group-item bg-secondary d-flex justify-content-between align-items-center" v-if="entry.ended_at" v-for="entry in entries" :key="entry.id">
                     <span>{{ entry.started_at }}-{{ entry.ended_at }}</span>
                     <span>0</span>
                 </li>
@@ -53,6 +53,7 @@
         props:['project'],
 
         data() {
+<<<<<<< HEAD
             /*
             const getEntries = async function (entryId) {
                 return await db.entry.get(entryId);
@@ -65,28 +66,55 @@
             let data = {
                 timer_running: false
             };
+=======
+            let data = {};
+>>>>>>> c0742f64854691a2333ae5348f52d93646631c4c
             data = Object.assign({}, data, this.project);
             return data;
         },
 
         mounted() {
             this.timer = new Timer();
+<<<<<<< HEAD
             if (this.timer_running) return;
 
             const collection = collect(this.entries);
             this.currentEntry = collection.where('ended_at', null).first();
             this.startTimer(this.currentEntry.started_at);
+=======
+            if (!this.timer_running) return;
+
+            //const collection = collect(entries);
+            //this.currentEntry = collection.where('ended_at', '').first();
+
+            //this.startTimer(this.currentEntry.started_at);
+>>>>>>> c0742f64854691a2333ae5348f52d93646631c4c
         },
 
         methods: {
+            
+            /*async getEntries() {
+                const entries =  await Promise.all(this.project.entries.map(async function (entryID) {
+                    const entry = await db.entry.get(entryID);
+                    return entry;
+                }));
+                console.log('entries', entries);
+                this.entries = entries;                
+            },*/
 
             async stopTimer(event) {
                 event.preventDefault();
+
                 this.timer.stop();
                 this.timer_running = false;
+
                 const ended_at = moment().format('Y-MM-DD H:mm:ss');
                 this.currentEntry.ended_at = ended_at;
+<<<<<<< HEAD
                 /*
+=======
+                
+>>>>>>> c0742f64854691a2333ae5348f52d93646631c4c
                 const currentEntry = await db.entry.update(this.currentEntry.id, {
                     ended_at
                 }); 
@@ -120,8 +148,27 @@
 
             continueWork(event) {
                 event.preventDefault();
-                this.createEntry();
-                //this.startTimer(moment().format('Y-MM-DD H:mm:ss'));
+                const startTime = moment().format('Y-MM-DD H:mm:ss');
+                axios.post('/entries', {
+                    project_id: this.id,
+                    started_at: startTime
+                })
+                    .then((response) => {
+                        console.log(response);
+                        if (response.data) {
+                            const entry = response.data;
+                            this.entries.push(entry);
+                            console.log(this.entries);
+                        }
+                    })
+
+                axios.put(`/projects/${this.id}`, {
+                    timer_started_at: startTime
+                })
+                    .then((response) => {
+                        console.log(response);
+                        this.timer_started_at = response.data.timer_started_at;
+                    })
             }
 
         }
