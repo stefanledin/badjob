@@ -43,6 +43,7 @@
 
 <script>
     import db from '../database';
+    import axios from 'axios';
     const Timer = require('easytimer');
     const moment = require('moment');
     const collect = require('collect.js');
@@ -52,6 +53,7 @@
         props:['project'],
 
         data() {
+            /*
             const getEntries = async function (entryId) {
                 return await db.entry.get(entryId);
             }
@@ -59,17 +61,20 @@
                 
             });
             console.log(this.project.entries);
-            return this.project;
+            */
+            let data = {
+                timer_running: false
+            };
+            data = Object.assign({}, data, this.project);
+            return data;
         },
 
         mounted() {
             this.timer = new Timer();
-            return;
-            if (!this.timer_running) return;
+            if (this.timer_running) return;
 
             const collection = collect(this.entries);
-            this.currentEntry = collection.where('ended_at', '').first();
-            //console.log(this.currentEntry.id, this.currentEntry.started_at, this.currentEntry.ended_at);
+            this.currentEntry = collection.where('ended_at', null).first();
             this.startTimer(this.currentEntry.started_at);
         },
 
@@ -81,33 +86,20 @@
                 this.timer_running = false;
                 const ended_at = moment().format('Y-MM-DD H:mm:ss');
                 this.currentEntry.ended_at = ended_at;
+                /*
                 const currentEntry = await db.entry.update(this.currentEntry.id, {
                     ended_at
                 }); 
-                //this.createEntry();
+                */
+                this.createEntry();
             },
 
             createEntry() {
-                /*
-                axios.post('/entries', {
-                    project_id: this.id,
-                    started_at: this.timer_started_at
+                axios.put('/entries/'+this.currentEntry.id, {
+                    ended_at: moment().format('Y-MM-DD H:mm:ss')
                 })
-                    .then((response) => {
-                        if (response.data) {
-                            const entry = response.data;
-                            this.entries.push(entry);
-                            console.log(this.entries);
-                        }
-                    })
-
-                axios.put(`/projects/${this.id}`, {
-                    timer_started_at: ''
-                })
-                    .then((response) => {
-                        this.timer_started_at = response.data.timer_started_at;
-                    })
-                */
+                .then(response => console.log(response))
+                .catch(error => console.log(error));
             },
 
             startTimer(startTime) {
@@ -122,6 +114,8 @@
                 this.timer.addEventListener('secondsUpdated', function (event) {
                      h4.innerHTML = this.timer.getTimeValues().toString();
                 }.bind(this));
+
+                this.timer_running = true;
             },
 
             continueWork(event) {

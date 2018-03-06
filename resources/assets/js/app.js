@@ -18,6 +18,7 @@ Vue.component('project', require('./components/project.vue'));
 
 import db from './database';
 import moment from 'moment';
+import axios from 'axios';
 const app = new Vue({
     el: '#app',
     
@@ -28,10 +29,8 @@ const app = new Vue({
     },
     
     created: async function () {
-        this.projects = await db.project.toArray();
-        /*axios.get('/projects').then((response) => {
-            this.projects = response.data;
-        }).catch((error) => console.log(error));*/
+        const projects = await axios.get('/projects')
+        this.projects = projects.data;
     },
     
     methods: {
@@ -39,32 +38,41 @@ const app = new Vue({
         async startWorking(event) {
             event.preventDefault();
 
-            const entryId = await db.entry.add({
+            /*const entryId = await db.entry.add({
                 started_at: moment().format('Y-MM-DD H:mm:ss'),
                 ended_at: ''
             });
-            //const entry = await db.entry.get(entryId);
             const projectId = await db.project.add({
                 name: this.start_working_on,
                 entries: [entryId],
                 timer_running: true
             });
 
-            const project = await db.project.get(projectId);
-            this.projects.push(project);
-            this.start_working_on = '';
+            const project = await db.project.get(projectId);*/
 
-            /* axios.post('/projects', {
-                name: this.start_working_on
-            })
-                .then((response) => {
-                    if (response.data) {
-                        const project = response.data;
-                        this.projects.unshift(project);
-                    }
-                    this.start_working_on = '';
-                })
-                .catch((error) => console.log(error)); */
+            /**
+             * Skapa ett projekt.
+             */
+            let project = await axios.post('/projects', {
+                name: this.start_working_on    
+            }).catch(error => console.log('error: ', error));
+            
+            /**
+             * Skapa ett entry.
+             */
+            const entry = await axios.post('/entries', {
+                started_at: moment().format('Y-MM-DD H:mm:ss'),
+                ended_at: '',
+                project_id: project.data.id
+            }).catch(error => console.log(error));
+
+            /**
+             * Lägg till entryt i projektet.
+             */
+            project.data.entries = [entry.data];
+
+            this.projects.push(project.data);
+            this.start_working_on = '';
         }
 
     }

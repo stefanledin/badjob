@@ -39,7 +39,7 @@ class EntryController extends Controller
     {
         $entry = new Entry();
         $entry->started_at = $request->input('started_at');
-        $entry->ended_at = date('Y-m-d H:i:s');
+        $entry->ended_at = $request->input('ended_at');
         $entry->project()->associate($request->input('project_id'));
         $entry->save();
 
@@ -85,7 +85,11 @@ class EntryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $entry = Entry::find($id);
+        $entry->ended_at = $request->input('ended_at');
+        $entry->save();
+
+        return $entry;
     }
 
     /**
