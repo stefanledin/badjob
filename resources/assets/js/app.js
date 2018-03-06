@@ -9,6 +9,15 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
+import Echo from 'laravel-echo';
+window.Pusher = require('pusher-js');
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: '5f1d1c5da0682b0f98fd',
+    cluster: 'eu',
+    encrypted: true
+});
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -38,29 +47,6 @@ const app = new Vue({
         async startWorking(event) {
             event.preventDefault();
 
-<<<<<<< HEAD
-            /*const entryId = await db.entry.add({
-                started_at: moment().format('Y-MM-DD H:mm:ss'),
-                ended_at: ''
-            });
-=======
-            // Skapa ett entry och returnera ID
-            const entryId = await db.entry.add({
-                started_at: moment().format('Y-MM-DD H:mm:ss'),
-                ended_at: ''
-            });
-            
-            // Skapa ett nytt projekt som har det nya entryt.
->>>>>>> c0742f64854691a2333ae5348f52d93646631c4c
-            const projectId = await db.project.add({
-                name: this.start_working_on,
-                entries: [entryId],
-                timer_running: true
-            });
-
-<<<<<<< HEAD
-            const project = await db.project.get(projectId);*/
-
             /**
              * Skapa ett projekt.
              */
@@ -76,19 +62,13 @@ const app = new Vue({
                 ended_at: '',
                 project_id: project.data.id
             }).catch(error => console.log(error));
-=======
-            const project = await db.project.get(projectId);
-            this.projects.push(project);
-
-            this.start_working_on = '';
->>>>>>> c0742f64854691a2333ae5348f52d93646631c4c
 
             /**
              * Lägg till entryt i projektet.
              */
             project.data.entries = [entry.data];
 
-            this.projects.push(project.data);
+            this.projects.unshift(project.data);
             this.start_working_on = '';
         }
 
