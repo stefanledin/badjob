@@ -18,6 +18,11 @@ window.Echo = new Echo({
     encrypted: true
 });
 
+window.Echo.private('project')
+    .listen('SendCreatedProject', (event) => {
+        console.log(e);
+    });
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

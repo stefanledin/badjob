@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Project;
 use App\Entry;
 use Illuminate\Http\Request;
+use App\Events\ProjectCreated;
 
 class ProjectController extends Controller
 {
@@ -41,6 +42,8 @@ class ProjectController extends Controller
             'name' => $request->input('name'),
             'timer_started_at' => date('Y-m-d H:i:s')
         ]);
+
+        event(new ProjectCreated($project));
         
         return $project;
     }

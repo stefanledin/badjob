@@ -17385,6 +17385,10 @@ window.Echo = new __WEBPACK_IMPORTED_MODULE_1_laravel_echo___default.a({
     encrypted: true
 });
 
+window.Echo.private('project').listen('SendCreatedProject', function (event) {
+    console.log(e);
+});
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
