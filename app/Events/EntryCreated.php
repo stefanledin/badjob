@@ -9,22 +9,22 @@ use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use App\Project;
+use App\Entry;
 
-class ProjectCreated implements ShouldBroadcast
+class EntryCreated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $project;
+    public $entry;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(Project $project)
+    public function __construct(Entry $entry)
     {
-        $this->project = $project; 
+        $this->entry = $entry;
     }
 
     /**
@@ -34,6 +34,6 @@ class ProjectCreated implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('project');
+        return new Channel('entry');
     }
 }

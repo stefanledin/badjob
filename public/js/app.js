@@ -17385,8 +17385,10 @@ window.Echo = new __WEBPACK_IMPORTED_MODULE_1_laravel_echo___default.a({
     encrypted: true
 });
 
-window.Echo.private('project').listen('SendCreatedProject', function (event) {
-    console.log(e);
+window.Echo.channel('entry').listen('EntryCreated', function (event) {
+    return console.log(event);
+}).listen('EntryUpdated', function (event) {
+    return console.log(event);
 });
 
 /**
@@ -17423,7 +17425,13 @@ var app = new Vue({
 
                             this.projects = projects.data;
 
-                        case 4:
+                            window.Echo.channel('project').listen('ProjectCreated', function (event) {
+                                return console.log(event);
+                            }).listen('ProjectDeleted', function (event) {
+                                return console.log('ProjectDeleted: ', event);
+                            });
+
+                        case 5:
                         case 'end':
                             return _context.stop();
                     }
@@ -17439,6 +17447,9 @@ var app = new Vue({
     }(),
 
     methods: {
+        deleteProject: function deleteProject(id) {
+            console.log(id);
+        },
         startWorking: function () {
             var _ref2 = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee2(event) {
                 var project, entry;
@@ -65406,6 +65417,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -65449,9 +65464,7 @@ var collect = __webpack_require__(174);
         createEntry: function createEntry() {
             __WEBPACK_IMPORTED_MODULE_1_axios___default.a.put('/entries/' + this.currentEntry.id, {
                 ended_at: this.currentEntry.ended_at
-            }).then(function (response) {
-                return console.log(response);
-            }).catch(function (error) {
+            }).then().catch(function (error) {
                 return console.log(error);
             });
         },
@@ -65487,6 +65500,11 @@ var collect = __webpack_require__(174);
                 }
             }).catch(function (error) {
                 return console.log(error);
+            });
+        },
+        deleteMe: function deleteMe() {
+            this.$emit('deleteProject', {
+                projectID: this.id
             });
         }
     }
@@ -73222,8 +73240,30 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "card bg-secondary text-light mb-4" }, [
-    _c("div", { staticClass: "card-header" }, [
-      _c("h4", { staticClass: "card-title" }, [_vm._v(_vm._s(_vm.name))])
+    _c("div", { staticClass: "card-header d-flex justify-content-between" }, [
+      _c("h4", { staticClass: "card-title" }, [_vm._v(_vm._s(_vm.name))]),
+      _vm._v(" "),
+      _c("button", { staticClass: "btn btn-sm", on: { click: _vm.deleteMe } }, [
+        _c(
+          "svg",
+          {
+            attrs: {
+              xmlns: "http://www.w3.org/2000/svg",
+              width: "12",
+              height: "12",
+              viewBox: "0 0 24 24"
+            }
+          },
+          [
+            _c("path", {
+              attrs: {
+                d:
+                  "M9 19c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5-17v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.315c0 .901.73 2 1.631 2h5.712zm-3 4v16h-14v-16h-2v18h18v-18h-2z"
+              }
+            })
+          ]
+        )
+      ])
     ]),
     _vm._v(" "),
     _vm.entries.length

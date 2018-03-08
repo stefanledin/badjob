@@ -18,10 +18,9 @@ window.Echo = new Echo({
     encrypted: true
 });
 
-window.Echo.private('project')
-    .listen('SendCreatedProject', (event) => {
-        console.log(e);
-    });
+window.Echo.channel('entry')
+    .listen('EntryCreated', event => console.log(event))
+    .listen('EntryUpdated', event => console.log(event));
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -45,9 +44,17 @@ const app = new Vue({
     created: async function () {
         const projects = await axios.get('/projects')
         this.projects = projects.data;
+
+        window.Echo.channel('project')
+            .listen('ProjectCreated', event => console.log(event))
+            .listen('ProjectDeleted', event => console.log('ProjectDeleted: ', event));
     },
     
     methods: {
+
+        deleteProject(id) {
+            console.log(id);
+        },
 
         async startWorking(event) {
             event.preventDefault();

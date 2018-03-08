@@ -16,6 +16,15 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\ProjectCreated' => [
             'App\Listeners\SendCreatedProject',
         ],
+        'App\Events\ProjectDeleted' => [
+            'App\Listeners\SendDeletedProject',
+        ],
+        'App\Events\EntryCreated' => [
+            'App\Listeners\SendCreatedEntry',
+        ],
+        'App\Events\EntryUpdated' => [
+            'App\Listeners\SendUpdatedEntry',
+        ],
     ];
 
     /**

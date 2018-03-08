@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Events\EntryCreated;
+use App\Events\EntryUpdated;
 
 use App\Entry;
 
@@ -42,6 +44,8 @@ class EntryController extends Controller
         $entry->ended_at = $request->input('ended_at');
         $entry->project()->associate($request->input('project_id'));
         $entry->save();
+
+        event(new EntryCreated($entry));
 
         return $entry;
     }
@@ -88,6 +92,8 @@ class EntryController extends Controller
         $entry = Entry::find($id);
         $entry->ended_at = $request->input('ended_at');
         $entry->save();
+
+        event(new EntryUpdated($entry));
 
         return $entry;
     }

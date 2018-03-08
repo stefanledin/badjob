@@ -11,7 +11,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use App\Project;
 
-class ProjectCreated implements ShouldBroadcast
+class ProjectDeleted implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -24,7 +24,7 @@ class ProjectCreated implements ShouldBroadcast
      */
     public function __construct(Project $project)
     {
-        $this->project = $project; 
+        $this->project = $project;        
     }
 
     /**
