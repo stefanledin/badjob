@@ -7,6 +7,7 @@ use App\Project;
 use App\Entry;
 use Illuminate\Http\Request;
 use App\Events\ProjectCreated;
+use App\Events\ProjectDeleted;
 
 class ProjectController extends Controller
 {
@@ -43,7 +44,7 @@ class ProjectController extends Controller
             'timer_started_at' => date('Y-m-d H:i:s')
         ]);
 
-        event(new ProjectCreated($project));
+        broadcast(new ProjectCreated($project))->toOthers();
         
         return $project;
     }
@@ -56,7 +57,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        //
+        return Project::where('id', $project->id)->with('entries')->get();
     }
 
     /**
@@ -92,7 +93,7 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        $project->destroy();        
-        
+        broadcast(new ProjectDeleted($project))->toOthers();
+        return $project->destroy($project->id);        
     }
 }

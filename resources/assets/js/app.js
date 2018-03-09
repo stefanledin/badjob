@@ -18,9 +18,6 @@ window.Echo = new Echo({
     encrypted: true
 });
 
-window.Echo.channel('entry')
-    .listen('EntryCreated', event => console.log(event))
-    .listen('EntryUpdated', event => console.log(event));
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -29,7 +26,7 @@ window.Echo.channel('entry')
  */
 Vue.component('project', require('./components/project.vue'));
 
-import db from './database';
+//import db from './database';
 import moment from 'moment';
 import axios from 'axios';
 const app = new Vue({
@@ -46,19 +43,28 @@ const app = new Vue({
         this.projects = projects.data;
 
         window.Echo.channel('project')
-            .listen('ProjectCreated', event => console.log(event))
-            .listen('ProjectDeleted', event => console.log('ProjectDeleted: ', event));
+            .listen('ProjectCreated', event => {
+                //this.startWorking(event.project)
+            })
+            .listen('ProjectDeleted', event => {
+                this.deleteProject({
+                    id: event.project.id
+                });
+            });
+        
+        window.Echo.channel('entry')
+            .listen('EntryCreated', async function(event) {
+                const response = await axios.get('/projects/'+event.entry.project_id);
+                const newProject = response.data[0];
+                this.startWorking(newProject);                
+            }.bind(this))
+            .listen('EntryUpdated', event => console.log('EntryUpdated', event));
     },
     
     methods: {
 
-        deleteProject(id) {
-            console.log(id);
-        },
-
-        async startWorking(event) {
+        async createProject(event) {
             event.preventDefault();
-
             /**
              * Skapa ett projekt.
              */
@@ -79,8 +85,22 @@ const app = new Vue({
              * Lägg till entryt i projektet.
              */
             project.data.entries = [entry.data];
+            
+            this.startWorking(project.data);
+        },
 
-            this.projects.unshift(project.data);
+        deleteProjectOnServer(projectToDelete) {
+            axios.delete('/projects/'+projectToDelete.id);
+            this.deleteProject(projectToDelete);
+        },
+
+        deleteProject(projectToDelete) {
+            this.projects = this.projects.filter(project => project.id !== projectToDelete.id);
+        },
+
+        startWorking(project) {
+            console.log(project.entries);
+            this.projects.unshift(project);
             this.start_working_on = '';
         }
 

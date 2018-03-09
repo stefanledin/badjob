@@ -24,23 +24,6 @@
                 <input type="submit" v-else v-on:click="stopTimer" value="Stopp" class="btn btn-danger">
             </form>
 
-            
-            <!--
-            <button class="btn btn-danger float-right" v-on:click="stop">Stopp</button>
-            -->
-
-            <!--
-            <div class="input-group">
-                <span class="input-group-btn">
-                    <button class="btn btn-dark border-dark" type="button" v-on:click="decrease">-0,25</button>
-                </span>
-                <input type="number" class="form-control text-center border-dark" :value="duration">
-                <span class="input-group-btn">
-                    <button class="btn btn-dark border-dark" type="button" v-on:click="increase">+0,25</button>
-                </span>
-            </div>
-            -->
-
         </div>
     </div>
 </template>
@@ -130,8 +113,8 @@
             },
 
             deleteMe() {
-                this.$emit('deleteProject', {
-                    projectID: this.id
+                this.$emit('deleteproject', {
+                    id: this.project.id
                 });
             }
 

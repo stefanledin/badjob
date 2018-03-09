@@ -45,7 +45,7 @@ class EntryController extends Controller
         $entry->project()->associate($request->input('project_id'));
         $entry->save();
 
-        event(new EntryCreated($entry));
+        broadcast(new EntryCreated($entry))->toOthers();
 
         return $entry;
     }
@@ -93,7 +93,7 @@ class EntryController extends Controller
         $entry->ended_at = $request->input('ended_at');
         $entry->save();
 
-        event(new EntryUpdated($entry));
+        broadcast(new EntryUpdated($entry))->toOthers();
 
         return $entry;
     }

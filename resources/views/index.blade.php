@@ -15,7 +15,7 @@
                     <div id="app">
                         <div class="card bg-secondary text-light mb-4" v-if="! working">
                             <div class="card-header">
-                                <form v-on:submit="startWorking">
+                                <form v-on:submit="createProject">
                                     <div class="input-group">
                                         <input type="text" class="form-control" name="working_with" placeholder="Vad ska du jobba med?" v-model="start_working_on">
                                         <span class="input-group-btn">
@@ -26,7 +26,7 @@
                             </div>
                         </div>
                         
-                        <project v-for="project in projects" v-bind:project="project" v-bind:key="project.id"></project>
+                        <project v-for="project in projects" v-bind:project="project" v-bind:key="project.id" v-on:deleteproject="deleteProjectOnServer"></project>
                     </div>
 
                 </div>
