@@ -1,3 +1,9 @@
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/serviceworker.js');
+    });
+}
+
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -65,28 +71,42 @@ const app = new Vue({
 
         async createProject(event) {
             event.preventDefault();
+
+            const newEntry = {
+                started_at: moment().format('Y-MM-DD H:mm:ss'),
+                ended_at: null
+            };
+            const newProject = {
+                name: this.start_working_on,
+                entries: [
+                    newEntry
+                ]
+            };
+            
+            this.startWorking(newProject);
+
             /**
              * Skapa ett projekt.
              */
-            let project = await axios.post('/projects', {
-                name: this.start_working_on    
-            }).catch(error => console.log('error: ', error));
+            let project = axios.post('/projects', newProject)
+                .then(response => {
+                    newProject.id = response.data.id;
+                })
+                .catch(error => console.log('project error: ', error));
             
             /**
              * Skapa ett entry.
              */
-            const entry = await axios.post('/entries', {
-                started_at: moment().format('Y-MM-DD H:mm:ss'),
-                ended_at: '',
-                project_id: project.data.id
-            }).catch(error => console.log(error));
+            const entry = axios.post('/entries', newEntry)
+                .then(response => {
+                    newEntry.id = response.data.id;
+                })
+                .catch(error => console.log('entry error:', error));
 
             /**
              * Lägg till entryt i projektet.
              */
-            project.data.entries = [entry.data];
-            
-            this.startWorking(project.data);
+            //project.data.entries = [entry.data];
         },
 
         deleteProjectOnServer(projectToDelete) {

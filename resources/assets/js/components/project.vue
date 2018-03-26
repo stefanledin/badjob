@@ -6,7 +6,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"><path d="M9 19c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5-17v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.315c0 .901.73 2 1.631 2h5.712zm-3 4v16h-14v-16h-2v18h18v-18h-2z"/></svg>
             </button>
         </div>
-        <div class="card-body" v-if="entries.length">
+        <div class="card-body" v-if="entries.length > 1">
             <ul class="list-group">
                 <li class="list-group-item bg-secondary d-flex justify-content-between align-items-center" v-if="entry.ended_at" v-for="entry in entries" :key="entry.id">
                     <span>{{ entry.started_at }}-{{ entry.ended_at }}</span>
@@ -18,7 +18,6 @@
 
             <form action="/entries" method="POST" class="d-flex justify-content-between">
                 <h4 class="card-title js-timer">00:00:00</h4>
-                <input type="hidden" :value="id">
                 <!--<input type="hidden" v-model="timer_started_at">-->
                 <input type="submit" v-if="! timer_running" v-on:click="continueWork" value="Fortsätt" class="btn btn-dark">
                 <input type="submit" v-else v-on:click="stopTimer" value="Stopp" class="btn btn-danger">
