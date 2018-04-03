@@ -1,5 +1,5 @@
 let mix = require('laravel-mix');
-const WorkboxPlugin = require('workbox-webpack-plugin');
+const {GenerateSW} = require('workbox-webpack-plugin');
 
 /*
  |--------------------------------------------------------------------------
@@ -14,12 +14,17 @@ const WorkboxPlugin = require('workbox-webpack-plugin');
 
 mix.js('resources/assets/js/app.js', 'public/js')
    .sass('resources/assets/sass/app.scss', 'public/css')
+   .version()
    .sourceMaps();
 
+/*
 mix.webpackConfig({
     plugins: [
-        new WorkboxPlugin.InjectManifest({
-            swSrc: './public/serviceworker.js',
+        new GenerateSW({
+            swDest: './public/serviceworker.js',
+            importWorkboxFrom: 'local',
+            
         })
     ]
 })
+*/
